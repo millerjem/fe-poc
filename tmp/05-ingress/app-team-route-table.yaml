@@ -1,0 +1,17 @@
+apiVersion: networking.gloo.solo.io/v2
+kind: RouteTable
+metadata:
+  name: frontend
+  namespace: online-boutique
+spec:
+  workloadSelectors: []
+  http:
+    - name: frontend
+      forwardTo:
+        destinations:
+          - ref:
+              name: frontend
+              namespace: online-boutique
+              cluster: gloo
+            port:
+              number: 80

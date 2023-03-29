@@ -1,0 +1,13 @@
+apiVersion: networking.gloo.solo.io/v2
+kind: ExternalService
+metadata:
+  name: auth0
+  namespace: ext-services
+spec:
+  hosts:
+  - dev-64ktibmv.us.auth0.com
+  ports:
+  - name: https
+    number: 443
+    protocol: HTTPS
+    clientsideTls: {}

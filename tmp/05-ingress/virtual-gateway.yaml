@@ -1,0 +1,21 @@
+apiVersion: networking.gloo.solo.io/v2
+kind: VirtualGateway
+metadata:
+  name: gloo-gateway
+  namespace: istio-ingress
+spec:
+  workloads:
+    - selector:
+        labels:
+          istio: ingressgateway
+        namespace: istio-ingress
+  listeners: 
+    # HTTP port
+    - http: {}
+      port:
+        number: 80
+      # delegate first routing decision to own team.
+      allowedRouteTables:
+        - host: '*'
+          selector:
+            workspace: ops-team

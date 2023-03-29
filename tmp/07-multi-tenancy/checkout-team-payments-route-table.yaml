@@ -1,0 +1,41 @@
+apiVersion: networking.gloo.solo.io/v2
+kind: RouteTable
+metadata:
+  name: payments
+  namespace: checkout
+spec:
+  workloadSelectors: []
+  http:
+    - name: payments
+      matchers:
+      - uri:
+          prefix: /payment
+      forwardTo:
+        destinations:
+          - ref:
+              name: paymentservice
+              namespace: checkout
+              cluster: gloo
+            port:
+              number: 50051
+---
+apiVersion: networking.gloo.solo.io/v2
+kind: RouteTable
+metadata:
+  name: shipping
+  namespace: checkout
+spec:
+  workloadSelectors: []
+  http:
+    - name: shipping
+      matchers:
+      - uri:
+          prefix: /shipping
+      forwardTo:
+        destinations:
+          - ref:
+              name: shippingservice
+              namespace: checkout
+              cluster: gloo
+            port:
+              number: 50051

@@ -1,0 +1,19 @@
+apiVersion: networking.gloo.solo.io/v2
+kind: RouteTable
+metadata:
+  name: checkout-ingress
+  namespace: istio-ingress
+spec:
+  hosts:
+    - 'checkout.solo.io'
+  virtualGateways:
+    - name: gloo-gateway
+      namespace: istio-ingress
+  workloadSelectors: []
+  http:
+    - name: checkout-team
+      labels:
+        team: "checkout"
+      delegate:
+        routeTables:
+        - workspace: checkout-team

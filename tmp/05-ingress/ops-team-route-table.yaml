@@ -1,0 +1,19 @@
+apiVersion: networking.gloo.solo.io/v2
+kind: RouteTable
+metadata:
+  name: global-ingress
+  namespace: istio-ingress
+spec:
+  hosts:
+    - '*'
+  virtualGateways:
+    - name: gloo-gateway
+      namespace: istio-ingress
+  workloadSelectors: []
+  http:
+    - name: app-team-ingress
+      labels:
+        team: "app"
+      delegate:
+        routeTables:
+        - workspace: app-team

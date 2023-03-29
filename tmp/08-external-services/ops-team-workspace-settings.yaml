@@ -1,0 +1,24 @@
+# workspace configuration
+apiVersion: admin.gloo.solo.io/v2
+kind: WorkspaceSettings
+metadata:
+  name: ops-team
+  # placed in the administrative namespace
+  namespace: istio-ingress
+spec:
+  # import service discovery from app-team, checkout team and external services teamn
+  importFrom:
+  - workspaces:
+    - name: app-team
+    - name: checkout-team
+    - name: ext-services
+  # export service discovery to any workspace that needs ingress
+  exportTo:
+  - workspaces:
+    - name: "*"
+  # for mutli cluster routing
+  options:
+    eastWestGateways:
+    - selector:
+        labels:
+          istio: eastwestgateway

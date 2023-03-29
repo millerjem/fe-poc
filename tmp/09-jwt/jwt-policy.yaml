@@ -1,0 +1,28 @@
+apiVersion: security.policy.gloo.solo.io/v2
+kind: JWTPolicy
+metadata:
+  name: httpbin
+  namespace: ext-services
+spec:
+  applyToRoutes:
+  - route:
+      labels:
+        route: httpbin
+  config:
+    providers:
+      auth0:
+        issuer: "https://dev-64ktibmv.us.auth0.com/"
+        audiences:
+        - "https://httpbin/api"
+        remote:
+          url: "https://dev-64ktibmv.us.auth0.com/.well-known/jwks.json"
+          destinationRef:
+            ref:
+              name: auth0
+              namespace: ext-services
+              cluster: gloo
+            kind: EXTERNAL_SERVICE
+            port:
+              number: 443
+          enableAsyncFetch: true
+        keepToken: true

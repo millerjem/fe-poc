@@ -1,0 +1,58 @@
+apiVersion: trafficcontrol.policy.gloo.solo.io/v2
+kind: RateLimitClientConfig
+metadata:
+  name: rate-limit-client-config
+  namespace: istio-ingress
+spec:
+  raw:
+    rateLimits:
+    - actions:
+      - genericKey:
+          descriptorValue: counter
+---
+apiVersion: admin.gloo.solo.io/v2
+kind: RateLimitServerConfig
+metadata:
+  name: rate-limit-server-config
+  namespace: istio-ingress
+spec:
+  destinationServers:
+  - ref:
+      cluster: gloo
+      name: rate-limiter
+      namespace: gloo-mesh-addons
+    port:
+      name: grpc
+  raw:
+    descriptors:
+    - key: generic_key
+      rateLimit:
+        requestsPerUnit: 3
+        unit: MINUTE
+      value: counter
+---
+apiVersion: trafficcontrol.policy.gloo.solo.io/v2
+kind: RateLimitPolicy
+metadata:
+  name: rate-limit-policy
+  namespace: istio-ingress
+spec:
+  applyToRoutes:
+  - route:
+      labels:
+        team: "app"
+  config:
+    serverSettings:
+      name: rate-limit-server-settings
+      namespace: istio-ingress
+      cluster: gloo
+    ratelimitClientConfig:
+      name: rate-limit-client-config
+      namespace: istio-ingress
+      cluster: gloo
+    ratelimitServerConfig:
+      name: rate-limit-server-config
+      namespace: istio-ingress
+      cluster: gloo
+    phase:
+      preAuthz: { }

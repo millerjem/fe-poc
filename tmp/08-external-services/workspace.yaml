@@ -1,0 +1,25 @@
+apiVersion: admin.gloo.solo.io/v2
+kind: Workspace
+metadata:
+  name: ext-services
+  namespace: gloo-mesh
+spec:
+  workloadClusters:
+  - name: 'gloo'
+    namespaces:
+    - name: ext-services
+---
+apiVersion: admin.gloo.solo.io/v2
+kind: WorkspaceSettings
+metadata:
+  name: ext-services
+  namespace: ext-services
+spec:
+  # import gateway service for ingress
+  importFrom:
+  - workspaces:
+    - name: ops-team
+  # share service discovery and routing to ingress
+  exportTo:
+  - workspaces:
+    - name: ops-team

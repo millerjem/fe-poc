@@ -1,0 +1,23 @@
+apiVersion: networking.gloo.solo.io/v2
+kind: RouteTable
+metadata:
+  name: httpbin-ingress
+  namespace: ext-services
+spec:
+  workloadSelectors: []
+  http:
+    - matchers:
+      - uri:
+          prefix: /httpbin
+      name: httpbin
+      labels:
+        route: httpbin
+      forwardTo:
+        pathRewrite: /
+        destinations:
+          - kind: EXTERNAL_SERVICE
+            ref:
+              name: httpbin
+              namespace: ext-services
+              cluster: gloo
+---

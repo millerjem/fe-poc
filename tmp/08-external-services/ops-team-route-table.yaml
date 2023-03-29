@@ -1,0 +1,19 @@
+apiVersion: networking.gloo.solo.io/v2
+kind: RouteTable
+metadata:
+  name: ext-service-ingress
+  namespace: istio-ingress
+spec:
+  hosts:
+    - 'ext-services.solo.io'
+  virtualGateways:
+    - name: gloo-gateway
+      namespace: istio-ingress
+  workloadSelectors: []
+  http:
+    - name: ext-services-ingress
+      labels:
+        routes: "ext-services"
+      delegate:
+        routeTables:
+        - workspace: ext-services
